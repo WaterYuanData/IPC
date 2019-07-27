@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.yuan.myipc.model.Parameters;
@@ -16,15 +17,14 @@ import com.yuan.myipc.model.Response;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Channel {
+    private static final String TAG = "Channel";
     private static final Channel ourInstance = new Channel();
+    private Gson mGson = new Gson();
+    private ConcurrentHashMap<Class<? extends IPCService>, IIPCService> binders = new ConcurrentHashMap<>();
 
     public static Channel getInstance() {
         return ourInstance;
     }
-
-    Gson mGson = new Gson();
-
-    private ConcurrentHashMap<Class<? extends IPCService>, IIPCService> binders = new ConcurrentHashMap<>();
 
     private Channel() {
     }
@@ -44,8 +44,7 @@ public class Channel {
             intent = new Intent(context, service);
         } else {
             intent = new Intent();
-            // 跨App的绑定
-            // TODO: 2019/7/27
+            // TODO: 2019/7/27 跨App的绑定
             intent.setClassName(packageName, service.getName());
         }
         context.bindService(intent, new IPCServiceConnection(service), Context.BIND_AUTO_CREATE);
@@ -61,6 +60,7 @@ public class Channel {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             IIPCService binder = IIPCService.Stub.asInterface(service);
+            Log.i(TAG, "onServiceConnected: ");
             binders.put(mService, binder);
         }
 
@@ -74,7 +74,7 @@ public class Channel {
         Request request = new Request(type, serviceId, methodName, makeParameters(parameters));
         IIPCService iipcService = binders.get(serviceClass);
         try {
-            return iipcService.send(request);
+            return iipcService.send(request);// TODO: 2019/7/27 若服务器没起来，客户端调用此处进入send()方法后会报错
         } catch (RemoteException e) {
             e.printStackTrace();
             // 也可以把null变成错误信息
@@ -87,7 +87,7 @@ public class Channel {
         if (objects != null) {
             parameters = new Parameters[objects.length];
             for (int i = 0; i < objects.length; i++) {
-                // TODO: 2019/7/27
+                // TODO: 2019/7/27 makeParameters
                 System.out.println("参数：" + objects[i].getClass().getName() + "=" + objects[i]);
                 parameters[i] = new Parameters(objects[i].getClass().getName(), mGson.toJson(objects[i]));
             }

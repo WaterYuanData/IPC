@@ -10,7 +10,6 @@ public class Request implements Parcelable {
     //执行方法
     public static final int GET_METHOD = 1;
 
-    //todo 请求类型
     private int type;
 
     //请求哪个服务 (ServiceId)

@@ -19,25 +19,25 @@ public class Registry {
         return sInstance;
     }
 
-    public void register(Class<?> clazz) {
+    public void register(Class<?> service) {
         // 1.服务id 与 class的表
-        ServiceId annotation = clazz.getAnnotation(ServiceId.class);
+        ServiceId annotation = service.getAnnotation(ServiceId.class);
         if (annotation == null) {
             throw new RuntimeException("必须使用ServiceId注解的服务才能注册！");
         }
         String serviceId = annotation.value();
-        mServices.put(serviceId, clazz);
+        mServices.put(serviceId, service);
 
         // 2.class与方法的表
-        ConcurrentHashMap<String, Method> methods = mMethods.get(clazz);
+        ConcurrentHashMap<String, Method> methods = mMethods.get(service);
         if (methods == null) {
             methods = new ConcurrentHashMap<String, Method>();
-            mMethods.put(clazz, methods);
+            mMethods.put(service, methods);
         }
         // TODO: 2019/7/27 getDeclaredMethods()与getMethods()用哪个？？？
-        for (Method method : clazz.getDeclaredMethods()) {
+        for (Method method : service.getDeclaredMethods()) {
             // 因为有重载方法的存在，所有不能以方法名 作为key！ 带上参数作为key！
-            StringBuilder builder = new StringBuilder();
+            StringBuilder builder = new StringBuilder(method.getName());// TODO: 2019/7/27 出错一
             builder.append("(");
             // 方法的参数类型数组
             Class<?>[] parameterTypes = method.getParameterTypes();

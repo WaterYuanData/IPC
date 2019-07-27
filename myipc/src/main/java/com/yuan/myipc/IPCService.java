@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
 
 public abstract class IPCService extends Service {
 
-    Gson mGson = new Gson();
+    private Gson mGson = new Gson();
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -45,7 +45,7 @@ public abstract class IPCService extends Service {
                         try {
                             Object instanceObject = Registry.getInstance().getInstanceObject(serviceId);
                             //获得结果
-                            Object result = method.invoke(instanceObject, objects);
+                            Object result = method.invoke(instanceObject, objects);// TODO: 2019/7/27 带参调用此处报错 
                             return new Response(mGson.toJson(result), true);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -63,7 +63,7 @@ public abstract class IPCService extends Service {
             Parameters parameter = parameters[i];
             //还原
             try {
-                // TODO: 2019/7/27
+                // TODO: 2019/7/27 restoreParameters
                 System.out.println("restoreParameters:" + parameter.getType() + "=" + parameter.getValue());
                 objects[i] = mGson.fromJson(parameter.getValue(), Class.forName(parameter.getType()));
             } catch (ClassNotFoundException e) {
@@ -73,7 +73,7 @@ public abstract class IPCService extends Service {
         return objects;
     }
 
-    // TODO: 2019/7/27
+    // TODO: 2019/7/27 IPCService0
     public static class IPCService0 extends IPCService {
     }
 

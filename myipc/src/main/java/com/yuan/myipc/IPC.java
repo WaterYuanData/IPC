@@ -14,8 +14,8 @@ public class IPC {
      * 注册接口
      * 服务端需要暴露出去的服务 注册！！！
      */
-    public static void register(Class<?> clazz) {
-        Registry.getInstance().register(clazz);
+    public static void register(Class<?> service) {
+        Registry.getInstance().register(service);
     }
     //===================================================
 
