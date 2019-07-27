@@ -2,6 +2,13 @@ package com.yuan.ipc;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
+
+import com.yuan.ipc.location.ILocationManager;
+import com.yuan.ipc.location.Location;
+import com.yuan.myipc.IPC;
+import com.yuan.myipc.IPCService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -9,5 +16,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    }
+
+    // 客户端通过动态代理获得接口类对象实例
+    public void location(View view) {
+        //指定获得单例的方法
+        ILocationManager locationManager = IPC.getInstanceWithName(IPCService.IPCService0.class, ILocationManager.class, "getDefault");
+        Location location = locationManager.getLocation();
+        Toast.makeText(getApplicationContext(), "位置是：" + location, Toast.LENGTH_SHORT).show();
+
+        Location locate = locationManager.getLocation(2);
+        Toast.makeText(getApplicationContext(), "位置是：" + locate, Toast.LENGTH_SHORT).show();
     }
 }

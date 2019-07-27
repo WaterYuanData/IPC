@@ -16,6 +16,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name="com.yuan.appserver.location.GpsService"
+            android:exported="true"
+            android:process=":gps" />
+        <!-- 用于与其他进程通信,框架提供 -->
+        <service
+            android:name="com.yuan.myipc.IPCService$IPCService0"
+            android:exported="true"
+            android:process=":gps" />
     </application>
 
 </manifest>

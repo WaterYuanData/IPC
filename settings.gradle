@@ -1,1 +1,1 @@
-include ':app', ':appserver', ':rpc'
+include ':app', ':appserver', ':myipc'
