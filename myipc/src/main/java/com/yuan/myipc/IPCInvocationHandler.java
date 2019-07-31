@@ -1,5 +1,7 @@
 package com.yuan.myipc;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.yuan.myipc.model.Request;
 import com.yuan.myipc.model.Response;
@@ -8,7 +10,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 public class IPCInvocationHandler implements InvocationHandler {
-
+    private static final String TAG = "IPCInvocationHandler";
     private final Class<? extends IPCService> mServiceClass;
     private final String mServiceId;
     Gson mGson = new Gson();
@@ -33,6 +35,7 @@ public class IPCInvocationHandler implements InvocationHandler {
                 return mGson.fromJson(source, returnType);
             }
         }
+        Log.e(TAG, "invoke: ");
         return null;
     }
 }

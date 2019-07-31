@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.yuan.myipc.model.Parameters;
@@ -13,7 +14,7 @@ import com.yuan.myipc.model.Response;
 import java.lang.reflect.Method;
 
 public abstract class IPCService extends Service {
-
+    private static final String TAG = "IPCService";
     private Gson mGson = new Gson();
 
     @Override
@@ -21,6 +22,7 @@ public abstract class IPCService extends Service {
         return new IIPCService.Stub() {
             @Override
             public Response send(Request request) throws RemoteException {
+                Log.d(TAG, "send: ");
                 String methodName = request.getMethodName();
                 Parameters[] parameters = request.getParameters();
                 String serviceId = request.getServiceId();

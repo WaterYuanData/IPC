@@ -1,10 +1,13 @@
 package com.yuan.myipc;
 
+import android.util.Log;
+
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Registry {
+    private static final String TAG = "Registry";
     private static Registry sInstance = new Registry();
 
     // 服务表
@@ -20,6 +23,7 @@ public class Registry {
     }
 
     public void register(Class<?> service) {
+        Log.d(TAG, "register: ");
         // 1.服务id 与 class的表
         ServiceId annotation = service.getAnnotation(ServiceId.class);
         if (annotation == null) {
@@ -55,6 +59,15 @@ public class Registry {
         for (Map.Entry<String, Class<?>> entry : mServices.entrySet()) {
             System.out.println("服务表：" + entry.getKey() + "=" + entry.getValue());
         }
+        /*
+2019-07-29 23:39:56.175 12581-12581/com.yuan.appserver:gps I/System.out: 服务表：LocationManager=class com.yuan.appserver.location.LocationManager
+2019-07-29 23:39:56.176 12581-12581/com.yuan.appserver:gps I/System.out: 方法表：class com.yuan.appserver.location.LocationManager
+2019-07-29 23:39:56.176 12581-12581/com.yuan.appserver:gps I/System.out: 参数：access$super(com.yuan.appserver.location.LocationManager,java.lang.String,[Ljava.lang.Object;)=public static java.lang.Object com.yuan.appserver.location.LocationManager.access$super(com.yuan.appserver.location.LocationManager,java.lang.String,java.lang.Object[])
+2019-07-29 23:39:56.176 12581-12581/com.yuan.appserver:gps I/System.out: 参数：getDefault()=public static com.yuan.appserver.location.LocationManager com.yuan.appserver.location.LocationManager.getDefault()
+2019-07-29 23:39:56.176 12581-12581/com.yuan.appserver:gps I/System.out: 参数：getLocation(int)=public com.yuan.appserver.location.Location com.yuan.appserver.location.LocationManager.getLocation(int)
+2019-07-29 23:39:56.178 12581-12581/com.yuan.appserver:gps I/System.out: 参数：getLocation()=public com.yuan.appserver.location.Location com.yuan.appserver.location.LocationManager.getLocation()
+2019-07-29 23:39:56.178 12581-12581/com.yuan.appserver:gps I/System.out: 参数：setLocation(com.yuan.appserver.location.Location)=public void com.yuan.appserver.location.LocationManager.setLocation(com.yuan.appserver.location.Location)
+         */
         for (Map.Entry<Class<?>, ConcurrentHashMap<String, Method>> entry : mMethods.entrySet()) {
             System.out.println("方法表：" + entry.getKey());
             for (Map.Entry<String, Method> methodEntry : entry.getValue().entrySet()) {

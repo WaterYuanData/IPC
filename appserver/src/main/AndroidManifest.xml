@@ -23,7 +23,7 @@
             android:process=":gps" />
         <!-- 用于与其他进程通信,框架提供 -->
         <service
-            android:name="com.yuan.myipc.IPCService$IPCService0"
+            android:name="com.yuan.myipc.IPCService$IPCService1"
             android:exported="true"
             android:process=":gps" />
     </application>
